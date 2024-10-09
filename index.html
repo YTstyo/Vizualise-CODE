@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Code Highlighter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Your Python File</h1>
+        <input type="file" id="fileInput" accept=".py" />
+        <button id="uploadBtn">Upload</button>
+        <div id="codeContainer" class="code-container"></div>
+        <button id="downloadBtn" style="display:none;">Download Image</button>
+    </div>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please select a Python file.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const code = e.target.result;
+                displayCode(code);
+            };
+            reader.readAsText(file);
+        });
+
+        function displayCode(code) {
+            const codeContainer = document.getElementById('codeContainer');
+            codeContainer.textContent = code;
+            codeContainer.style.display = 'block';
+            codeContainer.style.whiteSpace = 'pre-wrap';
+            codeContainer.style.backgroundColor = 'black';
+            codeContainer.style.color = 'white';
+            codeContainer.style.padding = '20px';
+            codeContainer.style.borderRadius = '10px';
+            document.getElementById('downloadBtn').style.display = 'inline';
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            html2canvas(document.getElementById('codeContainer')).then(function(canvas) {
+                const link = document.createElement('a');
+                link.download = 'highlighted_code.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html>
